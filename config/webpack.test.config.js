@@ -1,9 +1,9 @@
 const path = require('path')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/dist/plugin').default
 
 const config = {
   entry: [
-    path.resolve('./src/main.js')
+    path.resolve('./dist/main.js')
   ],
   module: {
     rules: [
@@ -24,7 +24,7 @@ const config = {
       {
         test: /\.(css)$/,
         use: [
-          'style-loader',
+          'vue-style-loader',
           'css-loader']
       },
       {

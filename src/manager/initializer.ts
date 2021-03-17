@@ -27,10 +27,15 @@
  * ```
  */
 
+export interface InitializerOptions {
+  libraries?: string[] | string;
+  callback?: string;
+}
+
 export default (() => {
   let isApiSetUp = false
 
-  return (options, loadCn) => {
+  return (options: InitializerOptions = {}, loadCn: boolean) => {
     if (typeof document === 'undefined') {
       // Do nothing if run from server-side
       return
@@ -50,8 +55,8 @@ export default (() => {
       }
 
       // libraries
-      if (Object.prototype.isPrototypeOf.call(Array.prototype, options.libraries)) {
-        options.libraries = options.libraries.join(',')
+      if (options.libraries && Array.isArray(options.libraries)) {
+        options.libraries = options.libraries.join(",");
       }
 
       options.callback = 'vueGoogleMapsInit'
@@ -62,8 +67,9 @@ export default (() => {
         baseUrl = 'https://maps.google.cn/'
       }
 
-      const query = Object.keys(options)
-        .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(options[key]))
+      const query = Object.entries(options)
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
         .join('&')
 
       const url = `${baseUrl}maps/api/js?${query}`

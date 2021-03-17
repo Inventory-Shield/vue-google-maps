@@ -1,10 +1,26 @@
 import lazy from '../utils/lazy-value'
+import type { Ref } from 'vue'
+import type { InitializerOptions } from '../manager/initializer'
 
-export default function (loadGmapApi, GmapApi) {
-  return function promiseLazyCreator (options) {
+export interface PromiseLazyOptions {
+  load?: InitializerOptions;
+  loadCn?: boolean;
+}
+
+declare global {
+  interface Window {
+    vueGoogleMapsInit?: (value: unknown) => void
+  }
+}
+
+export default function (
+  loadGmapApi: (options: InitializerOptions | undefined, loadCn: boolean) => void,
+  GmapApiLoaded: Ref<boolean>
+) {
+  return function promiseLazyCreator(options: PromiseLazyOptions) {
     // Things to do once the API is loaded
-    function onApiLoaded () {
-      GmapApi.gmapApi = {}
+    function onApiLoaded() {
+      GmapApiLoaded.value = true
       return window.google
     }
 
@@ -17,7 +33,7 @@ export default function (loadGmapApi, GmapApi) {
           return new Promise((resolve, reject) => {
             try {
               window.vueGoogleMapsInit = resolve
-              loadGmapApi(options.load, options.loadCn)
+              loadGmapApi(options.load, options.loadCn ?? false)
             } catch (err) {
               reject(err)
             }
