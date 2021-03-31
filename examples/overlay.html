@@ -11,22 +11,21 @@
     </google-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
-        v: '3.26',
-      },
-      // Demonstrating how we can customize the name of the components
-      installComponents: false,
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
-      Vue.component('google-map', VueGoogleMaps.Map);
-      Vue.component('ground-overlay', VueGoogleMaps.MapElementFactory({
+      const { createApp } = Vue
+      
+      const app = createApp({
+        data: () => ({
+          place: '',
+        }),
+      });
+      
+      app.component('google-map', VueGoogleMaps.Map);
+      app.component('ground-overlay', VueGoogleMaps.MapElementFactory({
         mappedProps: {
           'opacity': {}
         },
@@ -39,13 +38,16 @@
         ctr: () => google.maps.GroundOverlay,
         ctrArgs: (options, {source, bounds}) => [source, bounds, options],
       }));
-
-      new Vue({
-        el: '#root',
-        data: {
-          place: '',
+      app.use(VueGoogleMaps, {
+        load: {
+          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+          v: '3.26',
         },
+        // Demonstrating how we can customize the name of the components
+        installComponents: false,
       });
+      
+      app.mount('#root')
     });
   </script>
 

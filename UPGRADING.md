@@ -21,7 +21,7 @@ var VueGoogleMaps = require('vue2-google-maps')
 // If you are not using Webpack
 var VueGoogleMaps = require('vue2-google-maps/dist/vue-google-maps')
 
-Vue.use(VueGoogleMaps, {
+app.use(VueGoogleMaps, {
   load: { /* load options */ }
 })
 ```

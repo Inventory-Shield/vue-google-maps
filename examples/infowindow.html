@@ -10,20 +10,15 @@
     </gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
-      },
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
-      new Vue({
-        el: '#root',
-        data: {
+      const { createApp } = Vue
+      
+      const app = createApp({
+        data: () => ({
           center: {
             lat: 47.376332,
             lng: 8.547511
@@ -59,7 +54,7 @@
             },
             infoText: '<strong>Marker 3</strong>'
           }]
-        },
+        }),
         methods: {
           toggleInfoWindow: function(marker, idx) {
             this.infoWindowPos = marker.position;
@@ -79,6 +74,14 @@
 
         }
       });
+      
+      app.use(VueGoogleMaps, {
+        load: {
+          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
+        },
+      });
+      
+      app.mount('#root')
     });
   </script>
 

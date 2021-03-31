@@ -1,8 +1,14 @@
-import Vue from 'vue/dist/vue.js'
+import { createApp } from 'vue/dist/vue.js'
 import App from './app.vue'
 import * as VueGoogleMaps from '../../src/main.js'
 
-Vue.use(VueGoogleMaps, {
+const app = createApp({
+  components: {
+    myApp: App
+  }
+})
+
+app.use(VueGoogleMaps, {
   installComponents: true,
   load: {
     key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
@@ -10,12 +16,4 @@ Vue.use(VueGoogleMaps, {
   }
 })
 
-// json filter is now not bundled with vue
-Vue.filter('json', x => JSON.stringify(x))
-
-new Vue({
-  el: '#root',
-  components: {
-    myApp: App
-  }
-})
+app.mount('#root')

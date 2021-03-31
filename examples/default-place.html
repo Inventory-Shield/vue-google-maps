@@ -6,26 +6,18 @@
     {{place && place.lat}}, {{place && place.lng}},
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
-        libraries: 'places'
-      },
-      // Demonstrating how we can customize the name of the components
-      installComponents: true,
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
-      new Vue({
-        el: '#root',
-        data: {
+      const { createApp } = Vue
+      
+      const app = createApp({
+        data: () => ({
           place: null
-        },
+        }),
         methods: {
           updatePlace(what) {
             this.place = {
@@ -35,6 +27,17 @@
           }
         }
       });
+      
+      app.use(VueGoogleMaps, {
+        load: {
+          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+          libraries: 'places'
+        },
+        // Demonstrating how we can customize the name of the components
+        installComponents: true,
+      });
+      
+      app.mount('#root')
     });
   </script>
 

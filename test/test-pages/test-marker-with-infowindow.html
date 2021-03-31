@@ -16,19 +16,14 @@
     </gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="../../dist/vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
-      }
-    })
-
     document.addEventListener('DOMContentLoaded', () => {
-      window.theVue = new Vue({
-        el: '#app',
+      const { createApp } = Vue
+
+      const app = createApp({
         data () {
           return {
             infoWindow: {
@@ -59,6 +54,15 @@
           }
         }
       })
+      window.theVue = app
+      
+      app.use(VueGoogleMaps, {
+        load: {
+          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
+        }
+      })
+      
+      app.mount('#app')
     })
 
   </script>

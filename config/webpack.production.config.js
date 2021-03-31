@@ -1,18 +1,17 @@
 const path = require('path')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/dist/plugin').default
+const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const config = {
   entry: [
-    path.resolve('./src/main.js')
+    path.resolve('./dist/main.js')
   ],
   optimization: {
+    minimize: true,
     minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true
+      new TerserPlugin({
+        parallel: true
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
@@ -36,7 +35,7 @@ const config = {
       {
         test: /\.(css)$/,
         use: [
-          'style-loader',
+          'vue-style-loader',
           'css-loader']
       },
       {

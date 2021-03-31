@@ -65,7 +65,7 @@ export function bindProps (vueInst, googleMapsInst, props, options) {
 
     if (twoWay &&
         (vueInst.$gmapOptions.autobindAllEvents ||
-        vueInst.$listeners[eventName])) {
+        vueInst.$attrs[eventName])) {
       googleMapsInst.addListener(eventName, (ev) => { // eslint-disable-line no-unused-vars
         vueInst.$emit(eventName, googleMapsInst[getMethodName]())
       })

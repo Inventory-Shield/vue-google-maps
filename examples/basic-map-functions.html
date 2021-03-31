@@ -17,20 +17,15 @@
     </gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
-      },
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+      const { createApp } = Vue;
 
-    document.addEventListener('DOMContentLoaded', function() {
-      new Vue({
-        el: '#root',
-        data: {
+      const app = createApp({
+        data: () => ({
           center: {
             lat: 10.0,
             lng: 10.0
@@ -46,7 +41,7 @@
               lng: 11.0
             }
           }]
-        },
+        }),
 
         methods: {
           fitBounds() {
@@ -85,6 +80,14 @@
           },
         }
       });
+
+      app.use(VueGoogleMaps, {
+        load: {
+          key: "AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc",
+        },
+      });
+
+      app.mount("#root");
     });
   </script>
 

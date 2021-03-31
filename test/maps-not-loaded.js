@@ -1,5 +1,6 @@
 import assert from 'assert'
 import { getPage, loadFile } from './test-setup/test-common'
+import { createApp } from 'vue'
 const Lab = require('@hapi/lab')
 const lab = exports.lab = Lab.script()
 
@@ -15,14 +16,14 @@ lab.experiment('On-demand API loading', { timeout: 15000 }, function () {
   async function mountVue () {
     return page.evaluateHandle(() =>
       new Promise((resolve) => {
-        new Vue({
-          data: {
+        createApp({
+          data: () => ({
             loadMap: false
-          },
+          }),
           mounted () {
             resolve(this)
           }
-        }).$mount('#test1')
+        }).mount('#test1')
       }))
   }
 

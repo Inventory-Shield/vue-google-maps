@@ -28,26 +28,20 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://unpkg.com/vue@3.x"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
-        libraries: 'places',
-      },
-    });
-
     function closeLoop (path) {
       return path.concat(path.slice(0, 1))
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      window.XXX = new Vue({
-        el: '#root',
-        data: {
+      const { createApp } = Vue
+
+      const app = createApp({
+        data: () => ({
           center: {lat: 1.38, lng: 103.8},
           edited: null,
           paths: [
@@ -55,7 +49,7 @@
           mvcPaths: null,
           errorMessage: null,
           polygonGeojson: '',
-        },
+        }),
         watch: {
           polygonPaths: _.throttle(function (paths) {
             if (paths) {
@@ -140,6 +134,16 @@
           }
         }
       });
+      window.XXX = app
+
+      app.use(VueGoogleMaps, {
+        load: {
+          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+          libraries: 'places',
+        },
+      });
+      
+      app.mount('#root')
     });
   </script>
 

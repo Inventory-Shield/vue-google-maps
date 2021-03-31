@@ -19,9 +19,9 @@ The above three will go a long way to keeping the project maintainable and contr
 
 [![Build Status](https://travis-ci.org/xkjyeah/vue-google-maps.svg?branch=vue2)](https://travis-ci.org/xkjyeah/vue-google-maps)
 
-## Vue-2 port of vue-google-maps
+## Vue 3 port of vue-google-maps
 
-This is the Vue 2.x port of vue-google-maps!
+This is the Vue 3.x port of vue-google-maps!
 
 ## Attention!
 
@@ -79,10 +79,12 @@ If you are using Webpack and Vue file components, just add the following to your
 In your `main.js` or inside a Nuxt plugin:
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 
-Vue.use(VueGoogleMaps, {
+const app = createApp({...})
+
+app.use(VueGoogleMaps, {
   load: {
     key: 'YOUR_API_TOKEN',
     libraries: 'places', // This is required if you use the Autocomplete plugin
@@ -168,7 +170,8 @@ Add region and language localization:
 
 Example for [Localization](https://developers.google.com/maps/documentation/javascript/localization):
 ```vue
-Vue.use(VueGoogleMaps, {
+const app = createApp({...})
+app.use(VueGoogleMaps, {
   load: {
     region: 'VI',
     language: 'vi',

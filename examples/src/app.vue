@@ -6,7 +6,7 @@
     <input type="number" v-model.number="reportedCenter.lat" @change="updateMapCenter" />
     <br> Map center longitude:
     <input type="number" v-model.number="reportedCenter.lng" @change="updateMapCenter" />
-    <br> Map bounds: {{mapBounds | json}}
+    <br> Map bounds: {{JSON.stringify(mapBounds)}}
     <br> Map zoom: <input type="number" v-model.number.lazy="zoom" >
     <br> Dragged {{drag}} times
     <br> Left clicked {{mapClickedCount}} times
@@ -35,11 +35,11 @@
     <br>
     <h1>Polygon</h1> Visible: <input type="checkbox" v-model="pgvisible"> <br>
     <button @click="pgPath = opgPath">Reset Polygon to pentagon</button><br>
-    <button @click="pgPath = originalPlPath">Reset Polygon to a simple polygon</button><br> Path: {{pgPath | json}}
+    <button @click="pgPath = originalPlPath">Reset Polygon to a simple polygon</button><br> Path: {{JSON.stringify(pgPath)}}
     <br>
-    <h1>Circle</h1> Visible: <input type="checkbox" v-model="displayCircle"><br> {{circleBounds | json}}
+    <h1>Circle</h1> Visible: <input type="checkbox" v-model="displayCircle"><br> {{JSON.stringify(circleBounds)}}
     <br>
-    <h1>Rectangle</h1> Visible: <input type="checkbox" v-model="displayRectangle"><br> {{rectangleBounds | json}}
+    <h1>Rectangle</h1> Visible: <input type="checkbox" v-model="displayRectangle"><br> {{JSON.stringify(rectangleBounds)}}
     <br>
     <h1>PlaceInput</h1>
     <gmap-place-input label="Add a marker at this place" :select-first-on-enter="true" @place_changed="updatePlace($event)"></gmap-place-input>

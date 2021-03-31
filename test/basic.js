@@ -2,6 +2,7 @@ import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
 import { getPage, loadFile } from './test-setup/test-common'
+import { createApp } from 'vue'
 const Lab = require('@hapi/lab')
 const lab = exports.lab = Lab.script()
 
@@ -17,11 +18,11 @@ lab.experiment('Basic tests', { timeout: 15000 }, function () {
   async function mountVue () {
     return page.evaluateHandle(() =>
       new Promise((resolve) => {
-        new Vue({
+        createApp({
           created () {
             resolve(this)
           }
-        }).$mount('#test1')
+        }).mount('#test1')
       }))
   }
 

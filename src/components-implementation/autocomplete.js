@@ -46,8 +46,8 @@ export default {
   mounted () {
     this.$gmapApiPromiseLazy().then(() => {
       var scopedInput = null
-      if (this.$scopedSlots.input) {
-        scopedInput = this.$scopedSlots.input()[0].context.$refs.input
+      if (this.$scoped.input()) {
+        scopedInput = this.$scoped.input()()[0].context.$refs.input
         if (scopedInput && scopedInput.$refs) {
           scopedInput = scopedInput.$refs[this.childRefName || 'input']
         }
