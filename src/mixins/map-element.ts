@@ -1,3 +1,5 @@
+import { defineComponent, ComponentOptionsMixin } from 'vue'
+
 /**
  * @class MapElementMixin
  *
@@ -7,7 +9,7 @@
  *
  *
  * */
-export default {
+const mapElement: ComponentOptionsMixin = defineComponent({
   inject: {
     $mapPromise: { default: 'abcdef' }
   },
@@ -28,4 +30,6 @@ export default {
 
     return {}
   }
-}
+})
+
+export default mapElement;

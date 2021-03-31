@@ -1,58 +1,76 @@
+import { defineComponent, ComponentPropsOptions, ComponentOptions } from "vue";
 import bindEvents from '../utils/bind-events'
 import { bindProps, getPropsValues } from '../utils/bind-props'
 import MapElementMixin from '../mixins/map-element'
 import mappedPropsToVueProps from '../utils/mapped-props-to-vue-props'
 
-/**
- *
- * @param {Object} options
- * @param {Object} options.mappedProps - Definitions of props
- * @param {Object} options.mappedProps.PROP.type - Value type
- * @param {Boolean} options.mappedProps.PROP.twoWay
- *  - Whether the prop has a corresponding PROP_changed
- *   event
- * @param {Boolean} options.mappedProps.PROP.noBind
- *  - If true, do not apply the default bindProps / bindEvents.
- * However it will still be added to the list of component props
- * @param {Object} options.props - Regular Vue-style props.
- *  Note: must be in the Object form because it will be
- *  merged with the `mappedProps`
- *
- * @param {Object} options.events - Google Maps API events
- *  that are not bound to a corresponding prop
- * @param {String} options.name - e.g. `polyline`
- * @param {=> String} options.ctr - constructor, e.g.
- *  `google.maps.Polyline`. However, since this is not
- *  generally available during library load, this becomes
- *  a function instead, e.g. () => google.maps.Polyline
- *  which will be called only after the API has been loaded
- * @param {(MappedProps, OtherVueProps) => Array} options.ctrArgs -
- *   If the constructor in `ctr` needs to be called with
- *   arguments other than a single `options` object, e.g. for
- *   GroundOverlay, we call `new GroundOverlay(url, bounds, options)`
- *   then pass in a function that returns the argument list as an array
- *
- * Otherwise, the constructor will be called with an `options` object,
- *   with property and values merged from:
- *
- *   1. the `options` property, if any
- *   2. a `map` property with the Google Maps
- *   3. all the properties passed to the component in `mappedProps`
- * @param {Object => Any} options.beforeCreate -
- *  Hook to modify the options passed to the initializer
- * @param {(options.ctr, Object) => Any} options.afterCreate -
- *  Hook called when
- *
- */
+interface MappedProps {
+  [PROP: string]: {
+    /** Value type */
+    type: unknown;
+    /** Whether the prop has a corresponding PROP_changed event */
+    twoWay: boolean;
+    /**
+     * If true, do not apply the default bindProps / bindEvents. However
+     * it will still be added to the list of component props
+     */
+    noBind: boolean;
+  };
+}
+
+type Constructor = () => string;
+
+export interface MapElementOptions {
+  /** Definitions of props */
+  mappedProps: MappedProps;
+  /**
+   * Regular Vue-style props.
+   * Note: must be in the Object form because it will be
+   * merged with the `mappedProps`
+   */
+  props: ComponentPropsOptions;
+  /** Google Maps API events that are not bound to a corresponding prop */
+  events: Record<string, unknown>;
+  /** e.g. `polyline` */
+  name: string;
+  /**
+   * constructor, e.g.
+   *  `google.maps.Polyline`. However, since this is not
+   *  generally available during library load, this becomes
+   *  a function instead, e.g. () => google.maps.Polyline
+   *  which will be called only after the API has been loaded
+   */
+  ctr: Constructor;
+  /**
+   * If the constructor in `ctr` needs to be called with
+   *   arguments other than a single `options` object, e.g. for
+   *   GroundOverlay, we call `new GroundOverlay(url, bounds, options)`
+   *   then pass in a function that returns the argument list as an array
+   *
+   * Otherwise, the constructor will be called with an `options` object,
+   *   with property and values merged from:
+   *
+   *   1. the `options` property, if any
+   *   2. a `map` property with the Google Maps
+   *   3. all the properties passed to the component in `mappedProps`
+   */
+  ctrArgs: (mprops: MappedProps, props: ComponentPropsOptions) => Array<unknown>;
+  /** Hook to modify the options passed to the initializer */
+  beforeCreate: (arg: unknown) => unknown;
+  /** Hook called when */
+  afterCreate: (arg1: Constructor, arg2: unknown) => unknown;
+  
+  [key: string]: AnyOf<ArgumentTypes<ValuesOf<ComponentOptions>>>;
+}
 
 /**
  * Custom assert for local validation
  **/
-function _assert (v, message) {
+function _assert (v: unknown, message: string) {
   if (!v) throw new Error(message)
 }
 
-export default function (options) {
+export default function (options: MapElementOptions): ReturnType<typeof defineComponent> {
   const {
     mappedProps,
     name,
@@ -70,7 +88,7 @@ export default function (options) {
 
   _assert(!(rest.props instanceof Array), '`props` should be an object, not Array')
 
-  return {
+  return defineComponent({
     ...(typeof GENERATE_DOC !== 'undefined' ? { $vgmOptions: options } : {}),
     mixins: [MapElementMixin],
     props: {
@@ -126,10 +144,11 @@ export default function (options) {
     },
     destroyed () {
       // Note: not all Google Maps components support maps
-      if (this[instanceName] && this[instanceName].setMap) {
-        this[instanceName].setMap(null)
+      const instance = this[instanceName] as { setMap: (arg: null) => void } | undefined;
+      if (instance?.setMap) {
+        instance.setMap(null);
       }
     },
     ...rest
-  }
+  })
 }

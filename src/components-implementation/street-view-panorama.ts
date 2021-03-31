@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue'
 import bindEvents from '../utils/bind-events'
 import { bindProps, getPropsValues } from '../utils/bind-props'
 import mountableMixin from '../mixins/mountable'
@@ -46,7 +47,7 @@ const events = [
   'status_changed'
 ]
 
-export default {
+export default defineComponent({
   mixins: [mountableMixin],
   props: mappedPropsToVueProps(props),
   replace: false, // necessary for css styles
@@ -96,7 +97,7 @@ export default {
   mounted () {
     return this.$gmapApiPromiseLazy().then(() => {
       // getting the DOM element where to create the map
-      const element = this.$refs['vue-street-view-pano']
+      const element = this.$refs['vue-street-view-pano'] as HTMLElement
 
       // creating the map
       const options = {
@@ -143,4 +144,4 @@ export default {
       throw error
     })
   }
-}
+})

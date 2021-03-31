@@ -6,21 +6,28 @@ These are objects that are sensitive to element resize
 operations so it exposes a property which accepts a bus
 
 */
+import { ComponentOptionsMixin, defineComponent } from "vue";
 
-export default {
+const mountable: ComponentOptionsMixin = defineComponent({
   props: ['resizeBus'],
 
   data () {
     return {
-      _actualResizeBus: null
+      _actualResizeBus: null as unknown
+    }
+  },
+  
+  computed: {
+    actualResizeBus(): unknown {
+      return this._actualResizeBus;
     }
   },
 
   created () {
     if (typeof this.resizeBus === 'undefined') {
-      this.$data._actualResizeBus = this.$gmapDefaultResizeBus
+      this._actualResizeBus = this.$gmapDefaultResizeBus
     } else {
-      this.$data._actualResizeBus = this.resizeBus
+      this._actualResizeBus = this.resizeBus
     }
   },
 
@@ -34,10 +41,10 @@ export default {
   },
 
   watch: {
-    resizeBus (newVal, oldVal) { // eslint-disable-line no-unused-vars
-      this.$data._actualResizeBus = newVal
+    resizeBus (newVal) {
+      this._actualResizeBus = newVal
     },
-    '$data._actualResizeBus' (newVal, oldVal) {
+    actualResizeBus (newVal, oldVal) {
       if (oldVal) {
         oldVal.$off('resize', this._delayedResizeCallback)
       }
@@ -48,8 +55,10 @@ export default {
   },
 
   destroyed () {
-    if (this.$data._actualResizeBus) {
-      this.$data._actualResizeBus.$off('resize', this._delayedResizeCallback)
+    if (this._actualResizeBus) {
+      this._actualResizeBus.$off('resize', this._delayedResizeCallback)
     }
   }
-}
+})
+
+export default mountable;

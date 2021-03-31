@@ -76,6 +76,7 @@ export function install (app: App, options?: PluginOptions) {
   })
 
   app.config.globalProperties.$gmapDefaultResizeBus = defaultResizeBus
+  app.config.globalProperties.$gmapOptions = options;
   app.config.globalProperties.$gmapApiPromiseLazy = gmapApiPromiseLazy
 
   if (options.installComponents) {

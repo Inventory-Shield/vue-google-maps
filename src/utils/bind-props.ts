@@ -1,10 +1,12 @@
+import type { Component, ComponentObjectPropsOptions, PropType } from 'vue';
+import { watch, ref } from 'vue';
 import WatchPrimitiveProperties from './watch-primitive-properties'
 
-function capitalizeFirstLetter (string) {
+function capitalizeFirstLetter (string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export function getPropsValues (vueInst, props) {
+export function getPropsValues (vueInst: Component, props: ComponentObjectPropsOptions) {
   return Object.keys(props)
     .reduce(
       (acc, prop) => {
@@ -13,7 +15,7 @@ export function getPropsValues (vueInst, props) {
         }
         return acc
       },
-      {}
+      {} as Record<string, unknown>
     )
 }
 
@@ -24,9 +26,12 @@ export function getPropsValues (vueInst, props) {
   * watch. For deep watch, we also prevent the _changed event from being
   * emitted if the data source was external.
   */
-export function bindProps (vueInst, googleMapsInst, props, options) {
+export function bindProps <P>(vueInst: Component, googleMapsInst: google.maps.Map, props: ComponentObjectPropsOptions<P>) {
   for (const attribute in props) {
-    const { twoWay, type, trackProperties, noBind } = props[attribute]
+    const prop = props[attribute] as PropOptions | null | undefined;
+    if (!prop) continue
+
+    const { twoWay, type, trackProperties, noBind } = prop;
 
     if (noBind) continue
 
@@ -36,7 +41,7 @@ export function bindProps (vueInst, googleMapsInst, props, options) {
     const initialValue = vueInst[attribute]
 
     if (typeof googleMapsInst[setMethodName] === 'undefined') {
-      throw new Error(`${setMethodName} is not a method of (the Maps object corresponding to) ${vueInst.$options._componentTag}`)
+      throw new TypeError(`${setMethodName} is not a method of (the Maps object corresponding to) ${vueInst.$options._componentTag}`)
     }
 
     // We need to avoid an endless
@@ -44,14 +49,19 @@ export function bindProps (vueInst, googleMapsInst, props, options) {
     // although this may really be the user's responsibility
     if (type !== Object || !trackProperties) {
       // Track the object deeply
-      vueInst.$watch(attribute, () => {
-        const attributeValue = vueInst[attribute]
+      const attrib = ref(attribute);
+      watch(
+        attrib,
+        () => {
+          const attributeValue = vueInst[attribute];
 
-        googleMapsInst[setMethodName](attributeValue)
-      }, {
-        immediate: typeof initialValue !== 'undefined',
-        deep: type === Object
-      })
+          googleMapsInst[setMethodName](attributeValue);
+        },
+        {
+          immediate: typeof initialValue !== "undefined",
+          deep: type === Object,
+        }
+      );
     } else {
       WatchPrimitiveProperties(
         vueInst,
@@ -66,7 +76,7 @@ export function bindProps (vueInst, googleMapsInst, props, options) {
     if (twoWay &&
         (vueInst.$gmapOptions.autobindAllEvents ||
         vueInst.$listeners[eventName])) {
-      googleMapsInst.addListener(eventName, (ev) => { // eslint-disable-line no-unused-vars
+      googleMapsInst.addListener(eventName, () => {
         vueInst.$emit(eventName, googleMapsInst[getMethodName]())
       })
     }

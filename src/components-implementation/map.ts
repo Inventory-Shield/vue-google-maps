@@ -1,3 +1,5 @@
+import { defineComponent } from 'vue'
+import type { ComponentOptionsMixin, PropType } from 'vue'
 import bindEvents from '../utils/bind-events'
 import { bindProps, getPropsValues } from '../utils/bind-props'
 import mountableMixin from '../mixins/mountable'
@@ -6,7 +8,20 @@ import twoWayBindingWrapper from '../utils/two-way-binding-wrapper'
 import watchPrimitiveProperties from '../utils/watch-primitive-properties'
 import mappedPropsToVueProps from '../utils/mapped-props-to-vue-props'
 
-const props = {
+interface MapOptions {
+  recycle?: string;
+}
+
+declare global {
+  interface Window {
+    [key: string]: {
+      div?: HTMLElement;
+      map?: google.maps.Map;
+    };
+  }
+}
+
+const props: Record<string, PropOptions> = {
   center: {
     required: true,
     twoWay: true,
@@ -32,7 +47,7 @@ const props = {
     type: Number
   },
   options: {
-    type: Object,
+    type: Object as PropType<MapOptions>,
     default () { return {} }
   }
 }
@@ -53,45 +68,9 @@ const events = [
   'tilesloaded'
 ]
 
-// Plain Google Maps methods exposed here for convenience
-const linkedMethods = [
-  'panBy',
-  'panTo',
-  'panToBounds',
-  'fitBounds'
-].reduce((all, methodName) => {
-  all[methodName] = function (...args) {
-    if (this.$mapObject) { this.$mapObject[methodName].apply(this.$mapObject, args) }
-  }
-  return all
-}, {})
-
-// Other convenience methods exposed by Vue Google Maps
-const customMethods = {
-  resize () {
-    if (this.$mapObject) {
-      google.maps.event.trigger(this.$mapObject, 'resize')
-    }
-  },
-  resizePreserveCenter () {
-    if (!this.$mapObject) { return }
-
-    const oldCenter = this.$mapObject.getCenter()
-    google.maps.event.trigger(this.$mapObject, 'resize')
-    this.$mapObject.setCenter(oldCenter)
-  },
-
-  /// Override mountableMixin::_resizeCallback
-  /// because resizePreserveCenter is usually the
-  /// expected behaviour
-  _resizeCallback () {
-    this.resizePreserveCenter()
-  }
-}
-
 const recyclePrefix = '__gmc__'
 
-export default {
+const map: ComponentOptionsMixin = defineComponent({
   mixins: [mountableMixin],
   props: mappedPropsToVueProps(props),
 
@@ -194,15 +173,49 @@ export default {
       this.$mapPromiseDeferred.resolve(this.$mapObject)
 
       return this.$mapObject
-    }).catch((error) => {
+    }).catch((error: unknown) => {
       throw error
     })
   },
   methods: {
-    ...customMethods,
-    ...linkedMethods,
-    getRecycleKey () {
+    // Other convenience methods exposed by Vue Google Maps
+    resize () {
+      if (this.$mapObject) {
+        google.maps.event.trigger(this.$mapObject, 'resize')
+      }
+    },
+    resizePreserveCenter () {
+      if (!this.$mapObject) { return }
+
+      const oldCenter = this.$mapObject.getCenter()
+      google.maps.event.trigger(this.$mapObject, 'resize')
+      this.$mapObject.setCenter(oldCenter)
+    },
+
+    /// Override mountableMixin::_resizeCallback
+    /// because resizePreserveCenter is usually the
+    /// expected behaviour
+    _resizeCallback () {
+      this.resizePreserveCenter()
+    },
+
+    getRecycleKey (): string {
       return this.options.recycle ? recyclePrefix + this.options.recycle : recyclePrefix
-    }
+    },
+
+    // Plain Google Maps methods exposed here for convenience
+    ...[
+      'panBy',
+      'panTo',
+      'panToBounds',
+      'fitBounds'
+    ].reduce((all, methodName) => {
+      all[methodName] = function (...args: unknown[]) {
+        if (this.$mapObject) { this.$mapObject[methodName].apply(this.$mapObject, args) }
+      }
+      return all
+    }, {} as Record<string, unknown>),
   }
-}
+})
+
+export default map;

@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "isolatedModules": true,
     "strict": true,
-    "typeRoots": ["./node_modules/@types", "./src", "@/types"],
+    "typeRoots": ["./node_modules/@types", "./src", "./src/@types"],
     "types": ["node", "googlemaps"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
