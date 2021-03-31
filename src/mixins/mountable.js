@@ -6,6 +6,7 @@ These are objects that are sensitive to element resize
 operations so it exposes a property which accepts a bus
 
 */
+import emitter from 'tiny-emitter/instance'
 
 export default {
   props: ['resizeBus'],
@@ -39,17 +40,17 @@ export default {
     },
     '$data._actualResizeBus' (newVal, oldVal) {
       if (oldVal) {
-        oldVal.$off('resize', this._delayedResizeCallback)
+        emitter.off('resize', this._delayedResizeCallback)
       }
       if (newVal) {
-        newVal.$on('resize', this._delayedResizeCallback)
+        emitter.on('resize', this._delayedResizeCallback)
       }
     }
   },
 
   destroyed () {
     if (this.$data._actualResizeBus) {
-      this.$data._actualResizeBus.$off('resize', this._delayedResizeCallback)
+      emitter.off('resize', this._delayedResizeCallback)
     }
   }
 }

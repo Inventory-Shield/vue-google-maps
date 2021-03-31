@@ -9,6 +9,7 @@
 **/
 import MarkerClusterer from '@googlemaps/markerclustererplus'
 import mapElementFactory from '../factories/map-element'
+import emitter from 'tiny-emitter/instance'
 
 const props = {
   maxZoom: {
@@ -109,7 +110,7 @@ export default mapElementFactory({
 
     for (const prop in props) {
       if (props[prop].twoWay) {
-        this.$on(prop.toLowerCase() + '_changed', reinsertMarkers)
+        emitter.on(prop.toLowerCase() + '_changed', reinsertMarkers)
       }
     }
   },

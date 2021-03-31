@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/Inventory-Shield/vue-google-maps#readme",
   "dependencies": {
-    "@googlemaps/markerclustererplus": "^1.1.0"
+    "@googlemaps/markerclustererplus": "^1.1.0",
+    "tiny-emitter": "^2.1.0"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
