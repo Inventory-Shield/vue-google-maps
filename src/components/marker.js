@@ -109,7 +109,7 @@ export default mapElementFactory({
     }
   },
 
-  destroyed () {
+  unmounted () {
     if (!this.$markerObject) { return }
 
     if (this.$clusterObject) {

@@ -126,7 +126,7 @@ export default {
     }
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     const recycleKey = this.getRecycleKey()
     if (window[recycleKey]) {
       window[recycleKey].div = this.$mapObject.getDiv()

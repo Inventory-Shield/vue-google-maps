@@ -121,14 +121,15 @@ export default mapElementFactory({
     }
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
+    // FIXME: Vue 3 removes the $children property. Need to find another workaround
     /* Performance optimization when destroying a large number of markers */
-    this.$children.forEach(marker => {
-      if (marker.$clusterObject === this.$clusterObject) {
-        marker.$clusterObject = null
-        marker.setMap(null)
-      }
-    })
+    // this.$children.forEach(marker => {
+    //   if (marker.$clusterObject === this.$clusterObject) {
+    //     marker.$clusterObject = null
+    //     marker.setMap(null)
+    //   }
+    // })
 
     if (this.$clusterObject) {
       this.$clusterObject.clearMarkers()

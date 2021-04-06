@@ -103,7 +103,6 @@
           }
         }
       });
-      window.XXX = app
       
       app.use(VueGoogleMaps, {
         load: {
@@ -112,7 +111,7 @@
         },
       });
       
-      app.mount('#root')
+      window.XXX = app.mount('#root')
     });
   </script>
 

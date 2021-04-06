@@ -54,7 +54,6 @@
           }
         }
       })
-      window.theVue = app
       
       app.use(VueGoogleMaps, {
         load: {
@@ -62,7 +61,7 @@
         }
       })
       
-      app.mount('#app')
+      window.theVue = app.mount('#app')
     })
 
   </script>

@@ -48,7 +48,7 @@ export default {
     }
   },
 
-  destroyed () {
+  unmounted () {
     if (this.$data._actualResizeBus) {
       emitter.off('resize', this._delayedResizeCallback)
     }

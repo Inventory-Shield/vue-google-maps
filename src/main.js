@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue'
 import loadGmapApi from './manager/initializer'
 import promiseLazyFactory from './factories/promise-lazy'
+import emitter from 'tiny-emitter/instance'
 
 import KmlLayer from './components/kml-layer'
 import Marker from './components/marker'
@@ -54,7 +55,7 @@ export function install (app, options) {
   //   export default {  computed: { google: gmapApi }  }
   GmapApi = defineComponent({ data: () => ({ gmapApi: null }) })
 
-  const defaultResizeBus = defineComponent({})
+  const defaultResizeBus = emitter
 
   // Use a lazy to only load the API when
   // a VGM component is loaded

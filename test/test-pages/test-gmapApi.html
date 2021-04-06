@@ -28,7 +28,6 @@
           google: VueGoogleMaps.gmapApi
         }
       })
-      window.vue = app
       
       app.use(VueGoogleMaps, {
         load: {
@@ -36,7 +35,7 @@
         }
       })
 
-      app.mount('#test')
+      window.vue = app.mount('#test')
     })
 
   </script>

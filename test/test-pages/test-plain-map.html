@@ -9,24 +9,13 @@
 </head>
 
 <body>
-  <div id="test1">
+  <div>
     <h2>Test 1</h2>
-    <gmap-map :center="{lat: 1.38, lng: 103.8}" :zoom="12" class="map-container" ref="map"></gmap-map>
+    <div id="test1">
+      <gmap-map :center="{lat: 1.38, lng: 103.8}" :zoom="12" class="map-container" ref="map"></gmap-map>
+    </div>
   </div>
 
   <script src="https://unpkg.com/vue@3.x"></script>
   <script src="../../dist/vue-google-maps.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const { createApp } = Vue
-      
-      const app = createApp({})
-      app.use(VueGoogleMaps, {
-        load: {
-          key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
-        }
-      })
-    });
-  </script>
 </body>

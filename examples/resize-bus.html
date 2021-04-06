@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
           width: '200px',
           height: '200px',
         };
-        Vue.$gmapDefaultResizeBus.$emit('resize');
+        this.$gmapDefaultResizeBus.emit('resize');
       },
       updateBus() {
         this.customBus.$emit('resize');

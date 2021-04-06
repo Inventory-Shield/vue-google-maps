@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     methods: {
       updateStyle() {
         this.showElements = !this.showElements;
-        Vue.$gmapDefaultResizeBus.$emit('resize');
+        this.$gmapDefaultResizeBus.emit('resize');
       },
       updateBus() {
         this.customBus.$emit('resize');

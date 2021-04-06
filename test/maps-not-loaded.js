@@ -1,6 +1,5 @@
 import assert from 'assert'
 import { getPage, loadFile } from './test-setup/test-common'
-import { createApp } from 'vue'
 const Lab = require('@hapi/lab')
 const lab = exports.lab = Lab.script()
 
@@ -16,14 +15,21 @@ lab.experiment('On-demand API loading', { timeout: 15000 }, function () {
   async function mountVue () {
     return page.evaluateHandle(() =>
       new Promise((resolve) => {
-        createApp({
+        const app = Vue.createApp({
           data: () => ({
             loadMap: false
           }),
           mounted () {
             resolve(this)
           }
-        }).mount('#test1')
+        })
+        // This page does not have maps, but we use vue3-google-maps to ensure that Google Maps library is NEVER loaded
+        app.use(VueGoogleMaps, {
+          load: {
+            key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
+          }
+        })
+        app.mount('#test1')
       }))
   }
 

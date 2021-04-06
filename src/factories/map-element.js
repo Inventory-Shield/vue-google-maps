@@ -124,7 +124,7 @@ export default function (options) {
       this[promiseName] = promise
       return { [promiseName]: promise }
     },
-    destroyed () {
+    unmounted () {
       // Note: not all Google Maps components support maps
       if (this[instanceName] && this[instanceName].setMap) {
         this[instanceName].setMap(null)
